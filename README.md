@@ -17,7 +17,7 @@ new SQL2O.Builder()
                 .start();
 ```
 
-####example
+####sample
 db schema:
 ```
 CREATE TABLE `family` (

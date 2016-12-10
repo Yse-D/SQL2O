@@ -1,4 +1,4 @@
-package me.laudoak;
+package me.laudoak.util;
 
 import java.util.Formatter;
 

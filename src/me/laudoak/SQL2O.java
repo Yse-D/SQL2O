@@ -1,7 +1,10 @@
 package me.laudoak;
 
-import java.sql.*;
-import java.util.*;
+import me.laudoak.db.DBStarter;
+import me.laudoak.db.TypeMapper;
+import me.laudoak.type.DB;
+import me.laudoak.type.NAMING;
+import me.laudoak.type.SOURCE;
 
 /**
  * Created by laudoak on 16/12/8.
@@ -10,152 +13,86 @@ public class SQL2O
 {
     private static final String TAG = SQL2O.class.getSimpleName();
 
-    private static PreparedStatement pst;
-    private static ResultSet rs;
-    private static ResultSetMetaData rsmd;
-    private static Connection con;
+    private DB dbType;
+    private SOURCE sourceType;
+    private NAMING naming;
+    private String outputPath;
+    private DBStarter.Info info;
+    private TypeMapper typeMapper;
 
-    static
+    private DBStarter dbStarter;
+
+    private SQL2O(Builder builder)
     {
-        init();
+        this.dbType = builder.dbType;
+        this.sourceType = builder.sourceType;
+        this.naming = builder.naming;
+        this.outputPath = builder.outputPath;
+        this.info = builder.info;
+        this.typeMapper = builder.typeMapper;
+
+        dbStarter = new DBStarter();
     }
 
-    private static void init()
+    public void start()
     {
-        Property.load();
-        TypeMapper.load();
-        try
-        {
-            Class.forName(Property.driverclassname);
-            con = DriverManager.getConnection(Property.url);
+        dbStarter.setDbType(dbType);
+        dbStarter.setInfo(info);
+        dbStarter.setNaming(naming);
+        dbStarter.setOutputPath(outputPath);
+        dbStarter.setTypeMapper(typeMapper);
 
-        } catch (Exception e)
-        {
-            Log.error(TAG, "init error,cause:%s", e.getMessage());
-            e.printStackTrace();
-        }
+        dbStarter.start();
     }
 
-    public static String getBeanString()
-            throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
+    public static class Builder
     {
-        pst = con.prepareStatement(SysSQL.sql_schema);
-        rs = pst.executeQuery();
-        pst = con.prepareStatement(SysSQL.sql_tables);
-        rs = pst.executeQuery();
+        private DB dbType = DB.MYSQL;
+        private SOURCE sourceType = SOURCE.CONNECTION;
+        private NAMING naming = NAMING.HUMP;
+        private String outputPath = "src/";
+        private DBStarter.Info info = new DBStarter.Info("127.0.0.1", "3306", "test", "root", "");
+        private TypeMapper typeMapper = new TypeMapper().defaultMapper();
 
-        Map<String, String> tables = new HashMap<>();
-        while (rs.next())
+        public Builder dbType(DB dbType)
         {
-            rsmd = rs.getMetaData();
-//            for (int i = 1; i <= rsmd.getColumnCount(); i++)
-//            {
-//                Log.info(TAG, "column name:%s value:%s", rsmd.getColumnName(i), rs.getObject(i) == null ? "" : rs.getObject(i).toString());
-//                tables.put(rsmd.getColumnName(i), rs.getObject(i) == null ? "" : rs.getObject(i).toString());
-//            }
-            tables.put((String) rs.getObject(SysSQL.TABLE_NAME), (String) rs.getObject(SysSQL.TABLE_COMMENT) == null ? "" : (String) rs.getObject(SysSQL.TABLE_COMMENT));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        Iterator iterator = tables.keySet().iterator();
-        while (iterator.hasNext())
-        {
-            String tableName = (String) iterator.next();
-            String tableComment = tables.get(tableName);
-            sb.append(tableProcessor(tableName, tableComment));
+            this.dbType = dbType;
+            return this;
         }
 
-        return sb.toString();
-    }
-
-    private static String tableProcessor(String tableName, String tableComment)
-            throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public class " + tableName + "{\t//" + tableComment + "\n");
-        pst = con.prepareStatement(SysSQL.sql_schema);
-        rs = pst.executeQuery();
-        String sql_columns = String.format(SysSQL.sql_colums_format, Property.dbname, tableName);
-        pst = con.prepareStatement(sql_columns);
-        rs = pst.executeQuery();
-        while (rs.next())
+        public Builder sourceType(SOURCE sourceType)
         {
-            String meta = "\tprivate ";
-            rsmd = rs.getMetaData();
-            String name = (String) rs.getObject(SysSQL.COLUMN_NAME);
-            String type = TypeMapper.JTYPE((String) rs.getObject(SysSQL.DATA_TYPE));
-            String comment = (String) rs.getObject(SysSQL.COLUMN_COMMENT);
-            meta = meta + type + " " + name + "; " + " //" + comment;
-            sb.append(meta + "\n");
-//            for (int i = 1; i <= rsmd.getColumnCount(); i++)
-//            {
-//                Log.info(TAG, "column name:%s value:%s", rsmd.getColumnName(i), rs.getObject(i) == null ? "" : rs.getObject(i).toString());
-//
-//            }
+            this.sourceType = sourceType;
+            return this;
         }
 
-        return sb.append("\n}\n").toString();
-    }
-
-    public static Iterator getBeans(String condition, Object bean, String table)
-            throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
-    {
-        String sql = "SELECT * FROM " + table + " WHERE " + condition;
-        pst = con.prepareStatement(sql);
-        rs = pst.executeQuery();
-        rsmd = rs.getMetaData();
-        ArrayList link = new ArrayList();
-        Object element;
-        element = bean.getClass().newInstance();
-
-        while (rs.next())
+        public Builder naming(NAMING naming)
         {
-            rsmd = rs.getMetaData();
-            int lenclz = element.getClass().getDeclaredFields().length;
-            int lensql = rsmd.getColumnCount();
-            for (int i = 0; i < lensql; i++)
-            {
-                for (int j = 0; j < lenclz; j++)
-                {
-                    if (element.getClass().getDeclaredFields()[j].getName().equals(rsmd.getColumnName(i + 1)))
-                    {
-                        element.getClass().getDeclaredFields()[j].set(element, rs.getObject(i + 1));
-                    }
-                }
-            }
-            link.add(element);
-            element = bean.getClass().newInstance();
+            this.naming = naming;
+            return this;
         }
-        return link.iterator();
-    }
 
-    public static Object getBean(String condition, Object bean, String table)
-            throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
-    {
-        String sql = "SELECT * FROM " + table + " WHERE " + condition;
-        pst = con.prepareStatement(sql);
-        rs = pst.executeQuery();
-        rsmd = rs.getMetaData();
-        rs.next();
-        int length = bean.getClass().getDeclaredFields().length;
-        int length1 = rsmd.getColumnCount();
-        if (rs.getRow() == 1)
+        public Builder outputPath(String outputPath)
         {
-            for (int i = 0; i < length1; i++)
-            {
-                for (int j = 0; j < length; j++)
-                {
-                    if (bean.getClass().getDeclaredFields()[j].getName()
-                            .equals(rsmd.getColumnName(i + 1)))
-                    {
-                        bean.getClass().getDeclaredFields()[j].set(bean,
-                                rs.getObject(i + 1));
-                    }
-                }
-            }
-        } else
-            return null;
-        return bean;
-    }
+            this.outputPath = outputPath;
+            return this;
+        }
 
+        public Builder info(DBStarter.Info info)
+        {
+            this.info = info;
+            return this;
+        }
+
+        public Builder typeMapper(TypeMapper typeMapper)
+        {
+            this.typeMapper = typeMapper;
+            return this;
+        }
+
+        public SQL2O build()
+        {
+            return new SQL2O(this);
+        }
+    }
 }

@@ -48,7 +48,7 @@ public class SQL2O
     public static class Builder
     {
         private DB dbType = DB.MYSQL;
-        private SOURCE sourceType = SOURCE.CONNECTION;
+        private SOURCE sourceType = SOURCE.DBSERVER;
         private NAMING naming = NAMING.HUMP;
         private String outputPath = "src/";
         private DBStarter.Info info = new DBStarter.Info("127.0.0.1", "3306", "test", "root", "");

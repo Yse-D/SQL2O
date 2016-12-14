@@ -15,7 +15,7 @@ public class HumpNaming extends Naming
         {
             return UNKNOWN;
         }
-        return prefixLetterToUpper(raw);
+        return standardClassName(raw);
     }
 
     @Override
@@ -42,12 +42,11 @@ public class HumpNaming extends Naming
                 first = false;
             } else if (!Arguments.isNullOrEmpty(s))
             {
-                sb.append(prefixLetterToUpper(s));
+                sb.append(wordInitialCapital(s));
             }
         }
 
         return sb.toString();
-
     }
 
 }

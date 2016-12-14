@@ -13,24 +13,24 @@ public abstract class Naming
 
     public abstract String attributeName(String raw);
 
-    String prefixLetterToUpper(String src)
+    String standardClassName(String src)
     {
-        if (Arguments.isNull(src))
+        if (Arguments.isNullOrEmpty(src))
         {
             return UNKNOWN;
         }
 
-        char srcs[] = src.toCharArray();
-        for (int i = 0; i < srcs.length; i++)
+        String splits[] = split(src);
+        StringBuilder sb = new StringBuilder();
+        for (String unit : splits)
         {
-            if (isLetter(srcs[i]))
+            if (!Arguments.isNullOrEmpty(unit))
             {
-                srcs[i] = toUpper(srcs[i]);
-                break;
+                sb.append(wordInitialCapital(unit));
             }
         }
 
-        return charArrayToString(srcs);
+        return sb.toString();
     }
 
     boolean isLetter(char ch)
@@ -66,6 +66,18 @@ public abstract class Naming
     String[] split(String raw)
     {
         return raw.split("[-_]");
+    }
+
+    String wordInitialCapital(String raw)
+    {
+        if (Arguments.isNullOrEmpty(raw))
+        {
+            return UNKNOWN;
+        }
+
+        char chs[] = raw.toCharArray();
+        chs[0] = toUpper(chs[0]);
+        return charArrayToString(chs);
     }
 
 }

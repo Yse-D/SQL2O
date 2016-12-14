@@ -5,6 +5,6 @@ package me.laudoak.type;
  */
 public enum SOURCE
 {
-    CONNECTION,
-    FILE
+    DBSERVER,
+    SQLFILE
 }

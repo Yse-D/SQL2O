@@ -18,7 +18,7 @@ public class Test
         new SQL2O.Builder()
                 .dbType(DB.MYSQL)
                 .sourceType(SOURCE.DBSERVER)
-                .info(new DBStarter.Info("127.0.0.1", "3306", "user", "root", ""))
+                .info(new DBStarter.Info("127.0.0.1", "3306", "test", "root", ""))
                 .naming(NAMING.HUMP)
                 .typeMapper(new TypeMapper().defaultMapper())
                 .outputPath("/bean")

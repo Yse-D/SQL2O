@@ -17,7 +17,7 @@ new SQL2O.Builder()
                 .start();
 ```
 
-####sample
+####Sample
 db schema:
 ```
 CREATE TABLE `family` (
@@ -48,25 +48,26 @@ Java bean class:
 ```
 public class Family                           //家庭表
 {
-	private  Long      id                     //主键ID
-	private  Short     size                   //家庭人数
-	private  Short     kidSize                //小孩数
-	private  Byte      income                 //月收入－区间枚举值
-	private  String    address                //家庭地址
-	private  String    telephone              //家庭电话
-	private  String    postcode               //居住地邮编
-	private  Long      provinceId             //家庭地址－省
-	private  String    provinceName           //省名称
-	private  Long      cityId                 //家庭地址－市
-	private  String    cityName               //市名称
-	private  Long      districtId             //家庭地址－区
-	private  String    districtName           //区名称
-	private  Long      subdistrictId          //家庭地址－街道
-	private  String    subdistrictName        //街道名称
-	private  String    addrDetail             //家庭地址－详细地址部分
-	private  Byte      isDeleted              //删除标志 -1:删除 0:正常
-	private  Date      createdAt              //创建时间
-	private  Date      updatedAt              //更新时间
+	private  Long      id;                    //主键ID
+	private  Short     size;                  //家庭人数
+	private  Short     kidSize;               //小孩数
+	private  Byte      income;                //月收入－区间枚举值
+	private  String    address;               //家庭地址
+	private  String    telephone;             //家庭电话
+	private  String    postcode;              //居住地邮编
+	private  Long      provinceId;            //家庭地址－省
+	private  String    provinceName;          //省名称
+	private  Long      cityId;                //家庭地址－市
+	private  String    cityName;              //市名称
+	private  Long      districtId;            //家庭地址－区
+	private  String    districtName;          //区名称
+	private  Long      subdistrictId;         //家庭地址－街道
+	private  String    subdistrictName;       //街道名称
+	private  String    addrDetail;            //家庭地址－详细地址部分
+	private  Byte      isDeleted;             //删除标志 -1:删除 0:正常
+	private  Date      createdAt;             //创建时间
+	private  Date      updatedAt;             //更新时间
 }
+
 ```
 

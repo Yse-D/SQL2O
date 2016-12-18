@@ -12,7 +12,7 @@ new SQL2O.Builder()
                 .info(new DBStarter.Info("127.0.0.1","3306","test","root",""))//连接数据库信息(host,port,dbname,username,password)
                 .naming(NAMING.HUMP)//命名规则(与表字段相同/驼峰式)
                 .typeMapper(new TypeMapper().defaultMapper())//数据库字段类型与Java数据类型映射器
-                .outputPath("/bean")//Java文件输出路径
+                .outputPath("bean")//Java文件输出路径
                 .build()
                 .start();
 ```

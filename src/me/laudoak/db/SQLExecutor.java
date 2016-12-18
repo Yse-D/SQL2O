@@ -1,14 +1,15 @@
 package me.laudoak.db;
 
+import me.laudoak.entity.Table;
 import me.laudoak.util.Log;
 import me.laudoak.io.BeanFileWriter;
-import me.laudoak.name.Naming;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.List;
 
 /**
  * Created by laudoak on 16/12/10.
@@ -21,18 +22,14 @@ public abstract class SQLExecutor
     PreparedStatement ps;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    DBStarter dbStarter;
-    Naming naming;
-    TypeMapper typeMapper;
 
+    DBStarter dbStarter;
     private BeanFileWriter fileWriter;
 
-    SQLExecutor(DBStarter DBStarter, Naming naming, BeanFileWriter fileWriter,TypeMapper typeMapper)
+    SQLExecutor(DBStarter DBStarter, BeanFileWriter fileWriter)
     {
         this.dbStarter = DBStarter;
-        this.naming = naming;
         this.fileWriter = fileWriter;
-        this.typeMapper = typeMapper;
 
         init();
     }
@@ -53,9 +50,9 @@ public abstract class SQLExecutor
 
     public void execute()
     {
-        fileWriter.write(getAllJavaBeanStringAll());
+        fileWriter.write(getTableList());
     }
 
-    public abstract String getAllJavaBeanStringAll();
+    public abstract List<Table> getTableList();
 
 }

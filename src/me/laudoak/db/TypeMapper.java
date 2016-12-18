@@ -80,6 +80,7 @@ public class TypeMapper
         fillMap("LONGBLOB");
         fillMap("LONGTEXT");
         fillMap("ENUM");
+        fillMap("BIT");
 
     }
 

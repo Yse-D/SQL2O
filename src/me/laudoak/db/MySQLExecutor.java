@@ -1,12 +1,14 @@
 package me.laudoak.db;
 
+import me.laudoak.entity.MetaData;
+import me.laudoak.entity.Table;
 import me.laudoak.io.BeanFileWriter;
-import me.laudoak.name.Naming;
-import me.laudoak.util.StringFormat;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static me.laudoak.db.SystemSQL.sql_tables_format;
@@ -16,13 +18,13 @@ import static me.laudoak.db.SystemSQL.sql_tables_format;
  */
 public class MySQLExecutor extends SQLExecutor
 {
-    public MySQLExecutor(DBStarter dbStarter, Naming naming, BeanFileWriter fileWriter, TypeMapper typeMapper)
+    public MySQLExecutor(DBStarter dbStarter, BeanFileWriter fileWriter)
     {
-        super(dbStarter, naming, fileWriter, typeMapper);
+        super(dbStarter, fileWriter);
     }
 
     @Override
-    public String getAllJavaBeanStringAll()
+    public List<Table> getTableList()
     {
         try
         {
@@ -31,10 +33,10 @@ public class MySQLExecutor extends SQLExecutor
         {
             e.printStackTrace();
         }
-        return "failed";
+        return null;
     }
 
-    private String processor() throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
+    private List<Table> processor() throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
     {
         ps = conn.prepareStatement(SystemSQL.sql_schema);
         rs = ps.executeQuery();
@@ -46,37 +48,40 @@ public class MySQLExecutor extends SQLExecutor
         {
             tbinfos.put((String) rs.getObject(SystemSQL.TABLE_NAME), rs.getObject(SystemSQL.TABLE_COMMENT) == null ? "" : (String) rs.getObject(SystemSQL.TABLE_COMMENT));
         }
-
-        StringBuilder sb = new StringBuilder();
+        List<Table> tables = new ArrayList<>();
         Iterator iterator = tbinfos.keySet().iterator();
         while (iterator.hasNext())
         {
             String tableName = (String) iterator.next();
             String tableComment = tbinfos.get(tableName);
-            sb.append(tableProcessor(tableName, tableComment));
+            Table table = new Table(tableName, tableComment);
+            tableProcessor(tableName, table);
+            tables.add(table);
         }
-        return sb.toString();
+        return tables;
     }
 
-    private String tableProcessor(String tableName, String tableComment) throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
+    private void tableProcessor(String tableName, Table table) throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(StringFormat.formatClzHead("public", naming.className(tableName), tableComment));
         ps = conn.prepareStatement(SystemSQL.sql_schema);
         rs = ps.executeQuery();
         String sql_columns = String.format(SystemSQL.sql_colums_format, dbStarter.getDBName(), tableName);
         ps = conn.prepareStatement(sql_columns);
         rs = ps.executeQuery();
+
         while (rs.next())
         {
             rsmd = rs.getMetaData();
             String name = (String) rs.getObject(SystemSQL.COLUMN_NAME);
-            String type = typeMapper.JTYPE((String) rs.getObject(SystemSQL.DATA_TYPE));
+            String type = (String) rs.getObject(SystemSQL.DATA_TYPE);
             String comment = (String) rs.getObject(SystemSQL.COLUMN_COMMENT);
-            sb.append(StringFormat.formatAttributeRow("private", type, naming.attributeName(name), comment));
-        }
 
-        return sb.append("}\n").toString();
+            MetaData metaData = new MetaData();
+            metaData.setName(name);
+            metaData.setType(type);
+            metaData.setComment(comment);
+            table.appendAttribute(metaData);
+        }
     }
 
 }

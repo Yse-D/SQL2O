@@ -78,14 +78,14 @@ public class DBStarter
     public void start()
     {
         this.driver = dbType.getDriver();
-        this.url = String.format(dbType.getUrlFormat(),info.host,info.port,info.dbname,info.username,info.password);
+        this.url = String.format(dbType.getUrlFormat(), info.host, info.port, info.dbname, info.username, info.password);
         Naming name = naming.getNaming();
-        BeanFileWriter fileWriter = new BeanFileWriter(outputPath);
+        BeanFileWriter fileWriter = new BeanFileWriter(outputPath, name, typeMapper);
         switch (dbType)
         {
             case MYSQL:
             {
-                executor = new MySQLExecutor(this,name,fileWriter,typeMapper);
+                executor = new MySQLExecutor(this, fileWriter);
             }
         }
         executor.execute();

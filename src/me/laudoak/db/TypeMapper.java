@@ -11,7 +11,6 @@ import java.util.Properties;
  */
 public class TypeMapper
 {
-
     private Map<String, String> types = new HashMap<>();
 
     private Properties properties;

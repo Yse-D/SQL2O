@@ -1,23 +1,17 @@
-package me.laudoak.entity;
+package me.laudoak.model;
 
 /**
  * Created by laudoak on 16/12/18.
  */
-public class MetaData
+
+public class BaseModel
 {
     private String name;
-    private String type;
     private String comment;
 
-    public MetaData()
-    {
-
-    }
-
-    public MetaData(String name, String type, String comment)
+    public BaseModel(String name, String comment)
     {
         this.name = name;
-        this.type = type;
         this.comment = comment;
     }
 
@@ -29,16 +23,6 @@ public class MetaData
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
     }
 
     public String getComment()

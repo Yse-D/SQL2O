@@ -1,7 +1,5 @@
 package me.laudoak.db;
 
-import me.laudoak.io.BeanFileWriter;
-import me.laudoak.name.Naming;
 import me.laudoak.type.DB;
 import me.laudoak.type.NAMING;
 
@@ -12,13 +10,15 @@ public class DBStarter
 {
     private static final String TAG = DBStarter.class.getSimpleName();
 
-    private String driver;
-    private String url;
-    private Info info;
+    protected String driver;
+    protected String url;
+    protected Info info;
     private DB dbType;
-    private NAMING naming;
-    private String outputPath;
-    private TypeMapper typeMapper;
+
+    protected NAMING naming;
+    protected String projectName;
+    protected String packageName;
+    protected TypeMapper typeMapper;
 
     private SQLExecutor executor;
 
@@ -73,19 +73,41 @@ public class DBStarter
             return this;
         }
 
+        public String getHost()
+        {
+            return host;
+        }
+
+        public String getPort()
+        {
+            return port;
+        }
+
+        public String getDbname()
+        {
+            return dbname;
+        }
+
+        public String getUsername()
+        {
+            return username;
+        }
+
+        public String getPassword()
+        {
+            return password;
+        }
     }
 
     public void start()
     {
         this.driver = dbType.getDriver();
         this.url = String.format(dbType.getUrlFormat(), info.host, info.port, info.dbname, info.username, info.password);
-        Naming name = naming.getNaming();
-        BeanFileWriter fileWriter = new BeanFileWriter(outputPath, name, typeMapper);
         switch (dbType)
         {
             case MYSQL:
             {
-                executor = new MySQLExecutor(this, fileWriter);
+                executor = new MySQLExecutor(this);
             }
         }
         executor.execute();
@@ -93,17 +115,42 @@ public class DBStarter
 
     public String getDriver()
     {
-        return this.driver;
+        return driver;
     }
 
     public String getUrl()
     {
-        return this.url;
+        return url;
     }
 
-    public String getDBName()
+    public Info getInfo()
     {
-        return info.dbname;
+        return info;
+    }
+
+    public DB getDbType()
+    {
+        return dbType;
+    }
+
+    public NAMING getNaming()
+    {
+        return naming;
+    }
+
+    public String getProjectName()
+    {
+        return projectName;
+    }
+
+    public String getPackageName()
+    {
+        return packageName;
+    }
+
+    public TypeMapper getTypeMapper()
+    {
+        return typeMapper;
     }
 
     public void setDbType(DB dbType)
@@ -121,9 +168,14 @@ public class DBStarter
         this.naming = naming;
     }
 
-    public void setOutputPath(String outputPath)
+    public void setProjectName(String projectName)
     {
-        this.outputPath = outputPath;
+        this.projectName = projectName;
+    }
+
+    public void setPackageName(String packageName)
+    {
+        this.packageName = packageName;
     }
 
     public void setTypeMapper(TypeMapper typeMapper)

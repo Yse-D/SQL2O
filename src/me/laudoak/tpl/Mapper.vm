@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${beanName}">
+
+    <resultMap id="${beanName}" type="${packageName}.model.${beanName}">
+
+        <id column="id" property="id"/>
+    #foreach ($key in $propertyColumnMap.keySet())
+    <result column="$key" property="$propertyColumnMap.get($key)"/>
+    #end
+
+    </resultMap>
+
+    <sql id="table">
+        `${tableName}`
+    </sql>
+
+    <sql id="values">
+
+    #foreach ($value in $values)
+    #{${value}},
+    #end
+
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+    #foreach ($column in $columns)
+    `${column}`,
+    #end
+
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+    #foreach ($key in $conditionMap.keySet())
+    <if test="$conditionMap.get($key) != null">AND `$key`=#{$conditionMap.get($key)}</if>
+    #end
+
+    </sql>
+
+    <insert id="insert" parameterType="${packageName}.model.${beanName}" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="${packageName}.model.${beanName}">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="${beanName}">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="${beanName}">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="${packageName}.model.${beanName}">
+        UPDATE
+        <include refid="table"/>
+        <set>
+        #foreach ($key in $updateMap.keySet())
+        <if test="$updateMap.get($key) != null">`$key`=#{$updateMap.get($key)},</if>
+        #end
+        `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

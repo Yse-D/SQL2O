@@ -1,5 +1,5 @@
 *.jar
 *.iml
-*.out
-/.idea/*
-/out/*
+out
+fold
+.idea

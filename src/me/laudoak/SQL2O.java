@@ -16,7 +16,8 @@ public class SQL2O
     private DB dbType;
     private SOURCE sourceType;
     private NAMING naming;
-    private String outputPath;
+    private String projectName;
+    private String packageName;
     private DBStarter.Info info;
     private TypeMapper typeMapper;
 
@@ -27,7 +28,8 @@ public class SQL2O
         this.dbType = builder.dbType;
         this.sourceType = builder.sourceType;
         this.naming = builder.naming;
-        this.outputPath = builder.outputPath;
+        this.projectName = builder.projectName;
+        this.packageName = builder.packageName;
         this.info = builder.info;
         this.typeMapper = builder.typeMapper;
 
@@ -39,7 +41,8 @@ public class SQL2O
         dbStarter.setDbType(dbType);
         dbStarter.setInfo(info);
         dbStarter.setNaming(naming);
-        dbStarter.setOutputPath(outputPath);
+        dbStarter.setPackageName(packageName);
+        dbStarter.setProjectName(projectName);
         dbStarter.setTypeMapper(typeMapper);
 
         dbStarter.start();
@@ -50,7 +53,8 @@ public class SQL2O
         private DB dbType = DB.MYSQL;
         private SOURCE sourceType = SOURCE.DBSERVER;
         private NAMING naming = NAMING.HUMP;
-        private String outputPath = "src/";
+        private String projectName = "module";
+        private String packageName = "io.laudoak";
         private DBStarter.Info info = new DBStarter.Info("127.0.0.1", "3306", "test", "root", "");
         private TypeMapper typeMapper = new TypeMapper().defaultMapper();
 
@@ -72,9 +76,15 @@ public class SQL2O
             return this;
         }
 
-        public Builder outputPath(String outputPath)
+        public Builder projectName(String projectName)
         {
-            this.outputPath = outputPath;
+            this.projectName = projectName;
+            return this;
+        }
+
+        public Builder packageName(String packageName)
+        {
+            this.packageName = packageName;
             return this;
         }
 

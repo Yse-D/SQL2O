@@ -1,8 +1,8 @@
 package me.laudoak.db;
 
-import me.laudoak.entity.Table;
+import me.laudoak.gen.ctrl.GeneratorCtrl;
+import me.laudoak.model.Table;
 import me.laudoak.util.Log;
-import me.laudoak.io.BeanFileWriter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,13 +24,11 @@ public abstract class SQLExecutor
     ResultSetMetaData rsmd;
 
     DBStarter dbStarter;
-    private BeanFileWriter fileWriter;
+    private GeneratorCtrl generatorCtrl;
 
-    SQLExecutor(DBStarter DBStarter, BeanFileWriter fileWriter)
+    SQLExecutor(DBStarter DBStarter)
     {
         this.dbStarter = DBStarter;
-        this.fileWriter = fileWriter;
-
         init();
     }
 
@@ -50,7 +48,8 @@ public abstract class SQLExecutor
 
     public void execute()
     {
-        fileWriter.write(getTableList());
+        generatorCtrl = new GeneratorCtrl(dbStarter, getTableList());
+        generatorCtrl.export();
     }
 
     public abstract List<Table> getTableList();

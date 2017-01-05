@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties>
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1/blog"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </properties>
+
+    <settings>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+
+    <environments default="production">
+        <environment id="production">
+            <transactionManager type="MANAGED">
+                <property name="closeConnection" value="false"/>
+            </transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://127.0.0.1/blog"/>
+                <property name="username" value="root"/>
+                <property name="password" value=""/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+
+                  <mapper resource="mapper/NotificationMapper.xml"/>
+                  <mapper resource="mapper/MemberMapper.xml"/>
+                  <mapper resource="mapper/AdminMapper.xml"/>
+                  <mapper resource="mapper/PointGroupMapper.xml"/>
+                  <mapper resource="mapper/CommentMapper.xml"/>
+                  <mapper resource="mapper/MemberGroupMapper.xml"/>
+                  <mapper resource="mapper/PointDetailMapper.xml"/>
+                  <mapper resource="mapper/BlogMapper.xml"/>
+                  <mapper resource="mapper/AdminGroupMapper.xml"/>
+                  <mapper resource="mapper/GalleryMapper.xml"/>
+                  <mapper resource="mapper/PictureMapper.xml"/>
+                  <mapper resource="mapper/SensitiveWordMapper.xml"/>
+         
+    </mappers>
+
+</configuration>

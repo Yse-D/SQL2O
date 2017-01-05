@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Blog">
+
+    <resultMap id="Blog" type="io.laudoak.model.Blog">
+
+        <id column="id" property="id"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="recommend" property="recommend"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `blog`
+    </sql>
+
+    <sql id="values">
+
+        #{title},
+        #{content},
+        #{ownerId},
+        #{recommend},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `title`,
+        `content`,
+        `owner_id`,
+        `recommend`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="ownerId != null">AND `owner_id`=#{ownerId}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="recommend != null">AND `recommend`=#{recommend}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+        <if test="title != null">AND `title`=#{title}</if>
+        <if test="content != null">AND `content`=#{content}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.Blog" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.Blog">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="Blog">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="Blog">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.Blog">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="ownerId != null">`owner_id`=#{ownerId},</if>
+                <if test="recommend != null">`recommend`=#{recommend},</if>
+                <if test="title != null">`title`=#{title},</if>
+                <if test="content != null">`content`=#{content},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

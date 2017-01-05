@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PointGroup">
+
+    <resultMap id="PointGroup" type="io.laudoak.model.PointGroup">
+
+        <id column="id" property="id"/>
+        <result column="amount" property="amount"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="action_name" property="actionName"/>
+        <result column="name" property="name"/>
+        <result column="action_code" property="actionCode"/>
+        <result column="created_at" property="createdAt"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `point_group`
+    </sql>
+
+    <sql id="values">
+
+        #{name},
+        #{actionName},
+        #{actionCode},
+        #{amount},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `name`,
+        `action_name`,
+        `action_code`,
+        `amount`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="amount != null">AND `amount`=#{amount}</if>
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="actionName != null">AND `action_name`=#{actionName}</if>
+        <if test="name != null">AND `name`=#{name}</if>
+        <if test="actionCode != null">AND `action_code`=#{actionCode}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.PointGroup" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.PointGroup">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="PointGroup">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="PointGroup">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.PointGroup">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="amount != null">`amount`=#{amount},</if>
+                <if test="actionName != null">`action_name`=#{actionName},</if>
+                <if test="name != null">`name`=#{name},</if>
+                <if test="actionCode != null">`action_code`=#{actionCode},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

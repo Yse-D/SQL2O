@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdminGroup">
+
+    <resultMap id="AdminGroup" type="io.laudoak.model.AdminGroup">
+
+        <id column="id" property="id"/>
+        <result column="post_notification" property="postNotification"/>
+        <result column="blog_category" property="blogCategory"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="modify_member" property="modifyMember"/>
+        <result column="name" property="name"/>
+        <result column="add_model" property="addModel"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="member_group" property="memberGroup"/>
+        <result column="gallery_category" property="galleryCategory"/>
+        <result column="enter_member_back" property="enterMemberBack"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `admin_group`
+    </sql>
+
+    <sql id="values">
+
+        #{name},
+        #{blogCategory},
+        #{galleryCategory},
+        #{memberGroup},
+        #{modifyMember},
+        #{enterMemberBack},
+        #{postNotification},
+        #{addModel},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `name`,
+        `blog_category`,
+        `gallery_category`,
+        `member_group`,
+        `modify_member`,
+        `enter_member_back`,
+        `post_notification`,
+        `add_model`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="postNotification != null">AND `post_notification`=#{postNotification}</if>
+        <if test="blogCategory != null">AND `blog_category`=#{blogCategory}</if>
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="modifyMember != null">AND `modify_member`=#{modifyMember}</if>
+        <if test="name != null">AND `name`=#{name}</if>
+        <if test="addModel != null">AND `add_model`=#{addModel}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="memberGroup != null">AND `member_group`=#{memberGroup}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+        <if test="galleryCategory != null">AND `gallery_category`=#{galleryCategory}</if>
+        <if test="enterMemberBack != null">AND `enter_member_back`=#{enterMemberBack}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.AdminGroup" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.AdminGroup">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="AdminGroup">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="AdminGroup">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.AdminGroup">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="postNotification != null">`post_notification`=#{postNotification},</if>
+                <if test="blogCategory != null">`blog_category`=#{blogCategory},</if>
+                <if test="modifyMember != null">`modify_member`=#{modifyMember},</if>
+                <if test="name != null">`name`=#{name},</if>
+                <if test="addModel != null">`add_model`=#{addModel},</if>
+                <if test="memberGroup != null">`member_group`=#{memberGroup},</if>
+                <if test="galleryCategory != null">`gallery_category`=#{galleryCategory},</if>
+                <if test="enterMemberBack != null">`enter_member_back`=#{enterMemberBack},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

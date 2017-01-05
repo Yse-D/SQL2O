@@ -1,6 +1,6 @@
 package ${packageName}.dao;
 
-import ${packageName}.model.Gallery;
+import ${packageName}.model.${beanName};
 import org.springframework.stereotype.Repository;
 
 /**

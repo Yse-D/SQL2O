@@ -18,11 +18,11 @@ public class Test
         new SQL2O.Builder()
                 .dbType(DB.MYSQL)
                 .sourceType(SOURCE.DBSERVER)
-                .info(new DBStarter.Info("127.0.0.1", "3306", "link", "root", ""))
+                .info(new DBStarter.Info("127.0.0.1", "3306", "blog", "root", ""))
                 .naming(NAMING.HUMP)
                 .typeMapper(new TypeMapper().defaultMapper())
-                .projectName("Test2")
-                .packageName("io.demo")
+                .projectName("blog")
+                .packageName("io.laudoak")
                 .build()
                 .start();
 

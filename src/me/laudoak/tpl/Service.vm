@@ -1,6 +1,6 @@
 package ${packageName}.service;
 
-import ${packageName}.model${beanName};
+import ${packageName}.model.${beanName};
 
 import java.util.List;
 

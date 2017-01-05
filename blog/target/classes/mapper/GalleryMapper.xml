@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Gallery">
+
+    <resultMap id="Gallery" type="io.laudoak.model.Gallery">
+
+        <id column="id" property="id"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="name" property="name"/>
+        <result column="created_at" property="createdAt"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `gallery`
+    </sql>
+
+    <sql id="values">
+
+        #{name},
+        #{ownerId},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `name`,
+        `owner_id`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="ownerId != null">AND `owner_id`=#{ownerId}</if>
+        <if test="name != null">AND `name`=#{name}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.Gallery" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.Gallery">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="Gallery">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="Gallery">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.Gallery">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="ownerId != null">`owner_id`=#{ownerId},</if>
+                <if test="name != null">`name`=#{name},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

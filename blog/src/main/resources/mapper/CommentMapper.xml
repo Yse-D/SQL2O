@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Comment">
+
+    <resultMap id="Comment" type="io.laudoak.model.Comment">
+
+        <id column="id" property="id"/>
+        <result column="blog_id" property="blogId"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="content" property="content"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `comment`
+    </sql>
+
+    <sql id="values">
+
+        #{content},
+        #{blogId},
+        #{ownerId},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `content`,
+        `blog_id`,
+        `owner_id`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="blogId != null">AND `blog_id`=#{blogId}</if>
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="ownerId != null">AND `owner_id`=#{ownerId}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+        <if test="content != null">AND `content`=#{content}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.Comment" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.Comment">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="Comment">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="Comment">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.Comment">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="blogId != null">`blog_id`=#{blogId},</if>
+                <if test="ownerId != null">`owner_id`=#{ownerId},</if>
+                <if test="content != null">`content`=#{content},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

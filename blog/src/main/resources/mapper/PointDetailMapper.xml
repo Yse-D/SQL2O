@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PointDetail">
+
+    <resultMap id="PointDetail" type="io.laudoak.model.PointDetail">
+
+        <id column="id" property="id"/>
+        <result column="amount" property="amount"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="point_group_id" property="pointGroupId"/>
+    
+    </resultMap>
+
+    <sql id="table">
+        `point_detail`
+    </sql>
+
+    <sql id="values">
+
+        #{ownerId},
+        #{amount},
+        #{pointGroupId},
+        #{NOW()},
+        #{createdAt},
+        #{NOW()},
+        #{updatedAt},
+    
+        NOW(),
+        NOW()
+
+    </sql>
+
+    <sql id="columns">
+
+        `id`,
+        `owner_id`,
+        `amount`,
+        `point_group_id`,
+        `created_at`,
+        `updated_at`,
+    
+        `created_at`,
+        `updated_at`
+
+    </sql>
+
+    <sql id="condition">
+
+        WHERE 1=1
+        <if test="amount != null">AND `amount`=#{amount}</if>
+        <if test="updatedAt != null">AND `updated_at`=#{updatedAt}</if>
+        <if test="ownerId != null">AND `owner_id`=#{ownerId}</if>
+        <if test="createdAt != null">AND `created_at`=#{createdAt}</if>
+        <if test="id != null">AND `id`=#{id}</if>
+        <if test="pointGroupId != null">AND `point_group_id`=#{pointGroupId}</if>
+    
+    </sql>
+
+    <insert id="insert" parameterType="io.laudoak.model.PointDetail" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES (<include refid="values"/>)
+    </insert>
+
+    <delete id="delete" parameterType="io.laudoak.model.PointDetail">
+        DELETE FROM
+        <include refid="table"/>
+        <include refid="condition"/>
+    </delete>
+
+    <select id="selectOne" resultMap="PointDetail">
+        SELECT `id`,
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="select" resultMap="PointDetail">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+    </select>
+
+    <update id="update" parameterType="io.laudoak.model.PointDetail">
+        UPDATE
+        <include refid="table"/>
+        <set>
+                <if test="amount != null">`amount`=#{amount},</if>
+                <if test="ownerId != null">`owner_id`=#{ownerId},</if>
+                <if test="pointGroupId != null">`point_group_id`=#{pointGroupId},</if>
+                `updated_at` = NOW()
+        </set>
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

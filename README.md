@@ -27,5 +27,5 @@ Generate a Java back-end scaffolding quickly based on MySQL schema
 
 ### Sample
 
-[view this page](SAMPLE.md)
+[SAMPLE.md](SAMPLE.md)
 

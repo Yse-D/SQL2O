@@ -1,6 +1,6 @@
 ## SQL2O
 
-Quickly generate a Java back-end scaffolding based on MySQL schema
+Generate a Java back-end scaffolding quickly based on MySQL schema
 
 ### Features
 

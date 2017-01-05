@@ -53,8 +53,8 @@ public class SQL2O
         private DB dbType = DB.MYSQL;
         private SOURCE sourceType = SOURCE.DBSERVER;
         private NAMING naming = NAMING.HUMP;
-        private String projectName = "module";
-        private String packageName = "io.laudoak";
+        private String projectName = "project";
+        private String packageName = "io.demo";
         private DBStarter.Info info = new DBStarter.Info("127.0.0.1", "3306", "test", "root", "");
         private TypeMapper typeMapper = new TypeMapper().defaultMapper();
 

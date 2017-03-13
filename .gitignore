@@ -1,7 +1,4 @@
-*.jar
 *.iml
 out
-fold
 .idea
-bean
-src/libs
+.DS_Store

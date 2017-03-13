@@ -1,0 +1,41 @@
+database:
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/sample?useUnicode=true&characterEncoding=utf-8&useSSL=false
+  username: root
+  password:
+
+project:
+  packageName: io.laudoak
+  projectName: sample
+
+typeMapper:
+  #Numeric Data Types:
+  INT: Integer
+  TINYINT: Byte
+  SMALLINT: Short
+  MEDIUMINT: Integer
+  BIGINT: Long
+  FLOAT: Float
+  DOUBLE: Double
+  DECIMAL: Double
+  BIT: Byte
+  #Date and Time Types:
+  DATE: Date
+  DATETIME: Date
+  TIMESTAMP: Date
+  TIME: Date
+  YEAR: Date
+  #String Types:
+  CHAR: String
+  VARCHAR: String
+  BLOB: String
+  TEXT: String
+  TINYBLOB: String
+  TINYTEXT: String
+  MEDIUMBLOB: String
+  MEDIUMTEXT: String
+  LONGBLOB: String
+  LONGTEXT: String
+  ENUM: String
+
+

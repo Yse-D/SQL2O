@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driverClassName: ${driverClassName}
+    url: ${url}
+    username: ${username}
+    password: ${password}
+    initialize: false
+  output:
+    ansi:
+      enabled: always
+
+mybatis:
+  type-aliases-package: ${packageName}.model
+
+server:
+  port: 8080

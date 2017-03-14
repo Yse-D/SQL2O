@@ -40,7 +40,7 @@ public class RenderCenter {
         renderList = new ArrayList<>();
     }
 
-    private void regist(Class clz) {
+    private void register(Class clz) {
         Class[] paramTypes = {List.class, TypeMapper.class, Config.class};
         Object[] params = {tables, typeMapper, config};
         try {
@@ -54,17 +54,17 @@ public class RenderCenter {
     }
 
     public void render() {
-        regist(ApplicationJavaRender.class);
-        regist(ApplicationYmlRender.class);
-        regist(BaseMapperJavaRender.class);
-        regist(BaseServiceJavaRender.class);
-        regist(MapperJavaRender.class);
-        regist(MapperXmlRender.class);
-        regist(ModelJavaRender.class);
-        regist(PomXmlRender.class);
-        regist(SchemaSqlRender.class);
-        regist(ServiceImplJavaRender.class);
-        regist(ServiceJavaRender.class);
+        register(ApplicationJavaRender.class);
+        register(ApplicationYmlRender.class);
+        register(BaseMapperJavaRender.class);
+        register(BaseServiceJavaRender.class);
+        register(MapperJavaRender.class);
+        register(MapperXmlRender.class);
+        register(ModelJavaRender.class);
+        register(PomXmlRender.class);
+        register(SchemaSqlRender.class);
+        register(ServiceImplJavaRender.class);
+        register(ServiceJavaRender.class);
         if (!Arguments.isEmpty(renderList)) {
             for (AbRender render : renderList) {
                 render.render();

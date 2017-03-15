@@ -3,6 +3,7 @@ package io.laudoak.output.render;
 import io.laudoak.config.Config;
 import io.laudoak.model.TableModel;
 import io.laudoak.output.AbRender;
+import io.laudoak.output.TemplateEngine;
 import io.laudoak.sql.TypeMapper;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class ApplicationJavaRender extends AbRender {
         Map<String, Object> map = new HashMap<>();
         map.put("packageName", cnf.getPackageName());
         map.put("date", dateTime());
-        String value = engine.process(map, "Application.java.vm");
+        String value = TemplateEngine.instance().process(map, "Application.java.vm");
         out(structure.getJavaPackagePath(), "Application.java", value);
     }
 }

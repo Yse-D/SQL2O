@@ -3,6 +3,7 @@ package io.laudoak.config;
 import io.laudoak.auxiliary.Arguments;
 import io.laudoak.auxiliary.StringAuxiliary;
 
+import static io.laudoak.auxiliary.StringAuxiliary.initialLetterLower;
 import static io.laudoak.auxiliary.StringAuxiliary.initialLetterUpper;
 
 /**
@@ -71,7 +72,7 @@ public class Naming {
         if (Arguments.isNullOrEmpty(raw)) {
             return UNKNOWN;
         }
-        return initialLetterUpper(raw);
+        return initialLetterLower(raw);
     }
 
 

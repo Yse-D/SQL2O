@@ -16,6 +16,8 @@ import java.util.Map;
 
 /**
  * Created by laudoak on 17/3/12.
+ *
+ * MyBatis Mapper xml 文件
  */
 public class MapperXmlRender extends AbRender {
     public MapperXmlRender(List<TableModel> tables, TypeMapper typeMapper, Config cnf) {
@@ -33,10 +35,10 @@ public class MapperXmlRender extends AbRender {
             map.put("model", model.getName());
             map.put("packageName", cnf.getPackageName());
             map.put("table", table.getName());
-            map.put("resultMap", resultMap(table));
-            map.put("valueMap", valueMap(table));
-            map.put("columnMap", columnMap(table));
-            map.put("updateMap", updateMap(table));
+            map.put("resultMap", resultMap(table));//ignore id,created_at,updated_at column
+            map.put("valueMap", valueMap(table));//ignore id,created_at,updated_at column
+            map.put("columnMap", columnMap(table));//ignore id,created_at,updated_at column
+            map.put("updateMap", updateMap(table));//ignore id,created_at,updated_at column
             map.put("field", "${field}");
             String value = engine.process(map, "Mapper.xml.vm");
             out(structure.getMapperXmlPath(), model.getName() + "Mapper.xml", value);
@@ -50,7 +52,7 @@ public class MapperXmlRender extends AbRender {
         for (int i = 0; i < atts.size(); i++) {
             TableAtt att = atts.get(i);
             BeanAtt att1 = atts1.get(i);
-            if (att.getName().equals("id")) {
+            if (ignore(att.getName())) {
                 continue;
             }
             result.put(att.getName(), att1.getName());
@@ -64,7 +66,7 @@ public class MapperXmlRender extends AbRender {
         List<BeanAtt> atts = model.getAtts();
         for (int i = 0; i < atts.size(); i++) {
             BeanAtt att = atts.get(i);
-            if (att.getName().equals("id")) {
+            if (ignoreBeanAtt(att.getName())) {
                 continue;
             }
             values.add(att.getName());
@@ -76,6 +78,9 @@ public class MapperXmlRender extends AbRender {
         List<TableAtt> atts = table.getAtts();
         List<String> results = new ArrayList<>();
         for (int i = 0; i < atts.size(); i++) {
+            if (ignore(atts.get(i).getName())){
+                continue;
+            }
             results.add(atts.get(i).getName());
         }
         return results;
@@ -88,14 +93,19 @@ public class MapperXmlRender extends AbRender {
         for (int i = 0; i < atts.size(); i++) {
             TableAtt att = atts.get(i);
             BeanAtt att1 = atts1.get(i);
-            if (att.getName().equals("id")) {
-                continue;
-            }
-            if (att1.getType().equals("Date")) {
+            if (ignore(att.getName())) {
                 continue;
             }
             result.put(att.getName(), att1.getName());
         }
         return result;
+    }
+
+    private boolean ignore(String col){
+        return (col.equals("id") || col.equals("created_at") || col.equals("updated_at"));
+    }
+
+    private boolean ignoreBeanAtt(String col){
+        return (col.equals("id") || col.equals("createdAt") || col.equals("updatedAt"));
     }
 }

@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.mapper.${model}Mapper">
 
-    <resultMap id="${model}" type="${package}.model.${model}">
+    <resultMap id="${model}" type="${packageName}.model.${model}">
         <id column="id" property="id"/>
         #foreach ($key in $resultMap.keySet())
         <result column="$key" property="$resultMap.get($key)"/>
@@ -26,7 +26,7 @@
 
     <sql id="columns">
         #foreach ($value in $columnMap)
-        #{${value}},
+        `${value}`,
         #end
         `created_at`,
         `updated_at`
@@ -79,10 +79,9 @@
         UPDATE
         <include refid="table"/>
         <set>
-            <if test="object.title != null">`title`=#{object.title},</if>
-            <if test="object.content != null">`content`=#{object.content},</if>
-            <if test="object.ownerId != null">`owner_id`=#{object.ownerId},</if>
-            <if test="object.recommend != null">`recommend`=#{object.recommend},</if>
+            #foreach ($key in $updateMap.keySet())
+            <if test="object.$updateMap.get($key) != null">`$key`=#{object.$updateMap.get($key)},</if>
+            #end
             `updated_at` = NOW()
         </set>
         WHERE `id`=#{id}

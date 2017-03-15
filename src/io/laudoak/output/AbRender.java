@@ -26,7 +26,11 @@ public abstract class AbRender {
     protected Structure structure;
 
     protected Config cnf;
-    protected TemplateEngine engine = TemplateEngine.instance();
+    protected static TemplateEngine engine;
+
+    static {
+        engine = TemplateEngine.instance();
+    }
 
     public AbRender(List<TableModel> tables, TypeMapper typeMapper, Config cnf) {
         this.tables = tables;

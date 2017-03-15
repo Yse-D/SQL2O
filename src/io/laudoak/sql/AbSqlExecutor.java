@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by laudoak on 17/3/8.
+ * <p>
+ * sql 语语句执行基类
  */
 public abstract class AbSqlExecutor {
     private static final String TAG = AbSqlExecutor.class.getSimpleName();
@@ -28,7 +30,6 @@ public abstract class AbSqlExecutor {
         this.cnf = conf;
         this.typeMapper = typeMapper;
         try {
-            Logger.info(TAG, "sql driver class name>%s,url>%s", conf.getDriverClassName(), conf.getUrl());
             Class.forName(conf.getDriverClassName());
             con = DriverManager.getConnection(conf.getUrl());
         } catch (Exception e) {
@@ -38,8 +39,8 @@ public abstract class AbSqlExecutor {
     }
 
     public void execute() {
-        RenderCenter renderCneter = new RenderCenter(cnf, typeMapper, listTables());
-        renderCneter.render();
+        RenderCenter renderCenter = new RenderCenter(cnf, typeMapper, listTables());
+        renderCenter.render();
     }
 
     public abstract List<TableModel> listTables();

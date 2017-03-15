@@ -6,13 +6,14 @@ import io.laudoak.model.TableAtt;
 import io.laudoak.model.TableModel;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by laudoak on 17/3/8.
  */
 public class SqlExecutor extends AbSqlExecutor {
+
+    private static final String TAG = SqlExecutor.class.getSimpleName();
 
     public SqlExecutor(Config conf, TypeMapper typeMapper) {
         super(conf, typeMapper);
@@ -23,36 +24,57 @@ public class SqlExecutor extends AbSqlExecutor {
         try {
             return queryTables();
         } catch (Exception e) {
-            Logger.info("execute sql errorr,cause>%s", e.getMessage());
+            Logger.info("execute sql error,cause> %s", e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
 
-    private List<TableModel> queryTables() throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException {
+    /**
+     * 查询数据库的表
+     *
+     * @return
+     * @throws Exception
+     */
+    private List<TableModel> queryTables() throws Exception {
         ps = con.prepareStatement(Statement.SQL_USE_INFORMATION_SCHEMA);
         rs = ps.executeQuery();
         String sql_tables = String.format(Statement.SQL_SELECT_TABLES, cnf.getDb());
         ps = con.prepareStatement(sql_tables);
         rs = ps.executeQuery();
-        List<TableModel> tables = new ArrayList<>();
+        Map<String, String> tableMap = new HashMap<>();
         while (rs.next()) {
-            String name = (String) rs.getObject(Statement.TABLE_NAME);
-            String comment = verify((String) rs.getObject(Statement.TABLE_COMMENT));
-            TableModel table = new TableModel(name, comment);
-            queryTable(name, table);
+            String tableName = (String) rs.getObject(Statement.TABLE_NAME);
+            String tableComment = rs.getObject(Statement.TABLE_COMMENT) == null ? "" : (String) rs.getObject(Statement.TABLE_COMMENT);
+            tableMap.put(tableName, tableComment);
+        }
+        Iterator iterator = tableMap.keySet().iterator();
+        List<TableModel> tables = new ArrayList<>();
+        while (iterator.hasNext()) {
+            String tableName = (String) iterator.next();
+            String tableComment = tableMap.get(tableName);
+            TableModel table = new TableModel(tableName, tableComment);
+            queryTable(tableName, table);
             tables.add(table);
         }
+        Logger.info(TAG, "query tables,table size> %s", tables.size());
         return tables;
     }
 
-    private void queryTable(String tableName, TableModel table) throws SQLException, IllegalArgumentException, SecurityException, IllegalAccessException, InstantiationException {
+    /**
+     * 查询表的每一个字段
+     *
+     * @param tableName
+     * @param table
+     * @throws Exception
+     */
+    private void queryTable(String tableName, TableModel table) throws Exception {
+        Logger.info(TAG, "query table,table name> %s", tableName);
         ps = con.prepareStatement(Statement.SQL_USE_INFORMATION_SCHEMA);
         rs = ps.executeQuery();
         String sql_columns = String.format(Statement.SQL_SELECT_COLUMNS, cnf.getDb(), tableName);
         ps = con.prepareStatement(sql_columns);
         rs = ps.executeQuery();
-
         while (rs.next()) {
             rsmd = rs.getMetaData();
             String name = verify((String) rs.getObject(Statement.COLUMN_NAME));

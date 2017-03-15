@@ -21,4 +21,5 @@ public class ${model} {
     #foreach($att in $atts)
     private ${att.type} ${att.name}; //${att.comment}
     #end
+
 }

@@ -28,7 +28,6 @@ public class Config {
     private String port;
     private String db;
 
-
     //Project/Module profiles
     private String packageName;
     private String projectName;
@@ -47,10 +46,20 @@ public class Config {
         this.url = url + String.format("&user=%s&password=%s", username, password);
         extra(url);
         Logger.info(TAG,
-                "config build completed:\n" +
-                        "driver>%s, url>%s, username>%s, password>%s, schema>%s, host>%s, port>%s, db>%s, \n" +
-                        "packageName>%s, projectName>%s, \n" +
-                        "typeMapper>%s \n",
+                "config build completed:\n\n" +
+                        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
+                        "driver: %s\n" +
+                        "url: %s\n" +
+                        "username: %s\n" +
+                        "password: %s\n" +
+                        "schema: %s\n" +
+                        "host: %s\n" +
+                        "port: %s\n" +
+                        "db: %s\n" +
+                        "packageName: %s\n" +
+                        "projectName: %s\n" +
+                        "typeMapper: %s\n" +
+                        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",
                 driverClassName, url, username, password, schema, host, port, db, packageName, projectName, typeMapper);
     }
 
@@ -80,10 +89,6 @@ public class Config {
                 .typeMapper(tpMap)
                 .build();
         return config;
-    }
-
-    public static String getTAG() {
-        return TAG;
     }
 
     private void extra(String url) {

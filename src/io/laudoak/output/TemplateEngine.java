@@ -3,6 +3,7 @@ package io.laudoak.output;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
@@ -16,13 +17,17 @@ import java.util.Properties;
  */
 public class TemplateEngine {
 
-    private static final String LOAD_PATH = "io/laudoak/v2/template/";
+    private static final String LOAD_PATH = "io/laudoak/template/";
 
     static {
         Properties properties = new Properties();
         properties.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         properties.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
         Velocity.init(properties);
+    }
+
+    static {
+        Velocity.init();
     }
 
     private TemplateEngine() {

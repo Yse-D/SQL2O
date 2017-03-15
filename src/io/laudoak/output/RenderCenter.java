@@ -48,7 +48,7 @@ public class RenderCenter {
             AbRender render = (AbRender) constructor.newInstance(params);
             renderList.add(render);
         } catch (Exception e) {
-            Logger.error(TAG, "construct class error,class>%s,cause>%s:", clz.getName(), e.getMessage());
+            Logger.error(TAG, "construct class error,class>%s,cause>%s:", clz.getName(), e.getCause());
             e.printStackTrace();
         }
     }

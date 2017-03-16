@@ -1,12 +1,12 @@
 database:
   driverClassName: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/sample?useUnicode=true&characterEncoding=utf-8&useSSL=false
+  url: jdbc:mysql://localhost:3306/reeu-dev?useUnicode=true&characterEncoding=utf-8&useSSL=false
   username: root
   password:
 
 project:
   packageName: io.laudoak
-  projectName: sample
+  projectName: reeu-core
 
 typeMapper:
   #Numeric Data Types:

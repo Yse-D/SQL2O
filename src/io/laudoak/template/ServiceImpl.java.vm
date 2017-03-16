@@ -34,7 +34,7 @@ public class ${model}ServiceImpl implements ${model}Service {
     }
 
     @Override
-    public Blog findOneById(Long id) {
+    public ${model} findOneById(Long id) {
         return ${modelParam}Mapper.findOneById(id);
     }
 
@@ -54,7 +54,7 @@ public class ${model}ServiceImpl implements ${model}Service {
     }
 
     @Override
-    public Integer updateById(Long id, Blog object) {
+    public Integer updateById(Long id, ${model} object) {
         return ${modelParam}Mapper.updateById(id, object);
     }
 
